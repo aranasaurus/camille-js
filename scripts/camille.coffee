@@ -13,21 +13,29 @@ module.exports = (robot) ->
   random = (min, max) -> return Math.floor(Math.random() * (max-min)) + min
 
   greetings = ['Hi!', 'ohai!', 'Greetings, citizen.', 'Greetings, program.', 'Hiya!']
-  robot.respond /hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola/i, (res) ->
-    greeting = greetings[random(0, greetings.length)]
-    if random(0, 100) > 24
-      res.reply greeting
-    else
-      res.send greeting
+  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola)($|.*,? @?camille[.!]?)/i
+  robot.respond greetingRegex, (res) ->
+    res.reply res.random greetings
 
-  thanksResponses = ["You're welcome!", "Not a problem.", "No problemo.", "No worries.", "Any time!", "you betcha!", "sure thing!"]
-  robot.respond /thanks/i, (res) ->
+  robot.hear greetingRegex, (res) ->
+    name = res.match[3]
+    if (name.toLowerCase().indexOf robot.name.toLowerCase()) > -1
+      res.reply res.random greetings
+
+  thanksResponses = ["You're welcome!", "Not a problem.", "No problemo.", "No worries.", "Any time!", "you betcha!", "sure thing!", ":+1:"]
+  robot.respond /(thank).*/i, (res) ->
     welcome = thanksResponses[random(0, thanksResponses.length)]
 
     if random(0, 100) > 24
-      res.reply welcome
+      res.reply res.random thanksResponses
     else
-      res.send welcome
+      res.send res.random thanksResponses
+
+  robot.hear /thanks?,? (.*)@?camille(.*)/i, (res) ->
+    if random(0, 100) > 24
+      res.reply res.random thanksResponses
+    else
+      res.send res.random thanksResponses
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
