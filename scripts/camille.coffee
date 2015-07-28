@@ -13,7 +13,7 @@ module.exports = (robot) ->
   random = (min, max) -> return Math.floor(Math.random() * (max-min)) + min
 
   greetings = ['Hi!', 'ohai!', 'Greetings, citizen.', 'Greetings, program.', 'Hiya!']
-  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola)($|.*,? @?camille[.!]?)/i
+  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao)($|.*,? @?camille[.!]?)/i
   robot.respond greetingRegex, (res) ->
     res.reply res.random greetings
 
@@ -23,7 +23,7 @@ module.exports = (robot) ->
       res.reply res.random greetings
 
   thanksResponses = ["You're welcome!", "Not a problem.", "No problemo.", "No worries.", "Any time!", "you betcha!", "sure thing!", ":+1:"]
-  robot.respond /(thank).*/i, (res) ->
+  robot.respond /(thank|gracias|danke).*/i, (res) ->
     welcome = thanksResponses[random(0, thanksResponses.length)]
 
     if random(0, 100) > 24
