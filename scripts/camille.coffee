@@ -13,7 +13,7 @@ module.exports = (robot) ->
   random = (min, max) -> return Math.floor(Math.random() * (max-min)) + min
 
   greetings = ['Hi!', 'ohai!', 'Greetings, citizen.', 'Greetings, program.', 'Hiya!']
-  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour)(\.?!?$|.*,? @?camille[.!]?)/i
+  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)(\.?!?$|.*,? @?camille[.!]?)/i
   robot.respond greetingRegex, (res) ->
     res.reply res.random greetings
 
