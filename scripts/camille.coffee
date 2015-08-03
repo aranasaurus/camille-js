@@ -37,6 +37,9 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
+  robot.respond /.* me a coffee/i, (res) ->
+    res.reply ":coffee:"
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #
