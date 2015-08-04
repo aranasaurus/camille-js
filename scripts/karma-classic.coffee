@@ -81,7 +81,7 @@ module.exports = (robot) ->
   ###
   # Listen for "++" messages and increment
   ###
-  robot.hear /@(\S+[^+:\s])(:?|: )?\+\+(\s|$)/, (msg) ->
+  robot.hear /(?:@|:)(\S+[^+:\s])(:?|: )?\+\+(\s|$)/, (msg) ->
     subject = msg.match[1].toLowerCase().replace(':', '')
     karma.increment subject
     msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
@@ -89,7 +89,7 @@ module.exports = (robot) ->
   ###
   # Listen for "--" messages and decrement
   ###
-  robot.hear /@(\S+[^-:\s])(:?|: )?--(\s|$)/, (msg) ->
+  robot.hear /(?:@|:)(\S+[^-:\s])(:?|: )?--(\s|$)/, (msg) ->
     subject = msg.match[1].toLowerCase().replace(':', '')
     # avoid catching HTML comments
     unless subject[-2..] == "<!"
