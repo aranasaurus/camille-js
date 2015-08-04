@@ -15,7 +15,8 @@ module.exports = (robot) ->
     ":+1:",
     "you rock!",
     ":asdf:",
-    ":metal:"
+    ":metal:",
+    ":sparkling_heart:"
   ]
 
   robot.karma_decrement_responses = [
