@@ -55,10 +55,14 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /.* me (?:a |some )?coffee/i, (res) ->
-    res.link_names = true
-    res.message.link_names = true
-    res.reply ":coffee:"
+  robot.respond /(?:.* me|I'd like) (?:a |some )?coffee/i, (res) ->
+    res.reply res.random [
+      "here's a :coffee:",
+      "here, have some :coffee:",
+      ":coffee:",
+      ":coffee:, enjoy!",
+      ":coffee:, I hope it's as delicious as it was difficult to make..."
+    ]
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
