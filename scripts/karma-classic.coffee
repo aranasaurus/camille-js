@@ -135,6 +135,12 @@ module.exports = (robot) ->
   # Listen for "karma x" and return karma for x
   ###
   robot.respond /karma ?@?(\S+[^-\s:]):?$/i, (msg) ->
+    sendKarmaResponse(msg)
+
+  robot.respond /how (?:much|many) (?:karma ?-?)?(?:points)? does @?(\S+[^-\s:]):? have\??/i, (msg) ->
+    sendKarmaResponse(msg)
+
+  sendKarmaResponse = (msg) ->
     match = msg.match[1].toLowerCase()
     if not (match in ["best", "worst"])
       msg.send "\"#{match}\" has #{karma.get(match)} karma."
