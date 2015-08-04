@@ -25,11 +25,11 @@ class Karma
   constructor: (@robot) ->
     @cache = {}
 
-    @increment_responses = [
+    @increment_responses = @robot.karma_increment_responses ? [
       "+1!", "gained a level!", "is on the rise!", "leveled up!"
     ]
 
-    @decrement_responses = [
+    @decrement_responses = @robot.karma_decrement_responses ? [
       "took a hit! Ouch.", "took a dive.", "lost a life.", "lost a level."
     ]
 
@@ -37,7 +37,7 @@ class Karma
       if @robot.brain.data.karma
         @cache = @robot.brain.data.karma
 
-  kill: (thing) ->
+  clear: (thing) ->
     delete @cache[thing]
     @robot.brain.data.karma = @cache
 
@@ -81,7 +81,7 @@ module.exports = (robot) ->
   ###
   # Listen for "++" messages and increment
   ###
-  robot.hear /@(\S+[^+\s])\+\+(\s|$)/, (msg) ->
+  robot.hear /@(\S+[^+:\s])(:?|: )?\+\+(\s|$)/, (msg) ->
     subject = msg.match[1].toLowerCase().replace(':', '')
     karma.increment subject
     msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
@@ -89,7 +89,7 @@ module.exports = (robot) ->
   ###
   # Listen for "--" messages and decrement
   ###
-  robot.hear /@(\S+[^-\s])--(\s|$)/, (msg) ->
+  robot.hear /@(\S+[^-:\s])(:?|: )?--(\s|$)/, (msg) ->
     subject = msg.match[1].toLowerCase().replace(':', '')
     # avoid catching HTML comments
     unless subject[-2..] == "<!"
@@ -97,11 +97,11 @@ module.exports = (robot) ->
       msg.send "#{subject} #{karma.decrementResponse()} (Karma: #{karma.get(subject)})"
 
   ###
-  # Listen for "karma empty x" and empty x's karma
+  # Listen for "karma clear x" and empty x's karma
   ###
-  robot.respond /karma empty ?(\S+[^-\s])$/i, (msg) ->
+  robot.respond /karma clear ?@?(\S+[^-\s:]):?$/i, (msg) ->
     subject = msg.match[1].toLowerCase()
-    karma.kill subject
+    karma.clear subject
     msg.send "#{subject} has had its karma scattered to the winds."
 
   ###
@@ -134,7 +134,7 @@ module.exports = (robot) ->
   ###
   # Listen for "karma x" and return karma for x
   ###
-  robot.respond /karma (\S+[^-\s])$/i, (msg) ->
+  robot.respond /karma ?@?(\S+[^-\s:]):?$/i, (msg) ->
     match = msg.match[1].toLowerCase()
     if not (match in ["best", "worst"])
       msg.send "\"#{match}\" has #{karma.get(match)} karma."

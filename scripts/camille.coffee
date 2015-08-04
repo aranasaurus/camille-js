@@ -9,6 +9,23 @@
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
 module.exports = (robot) ->
+  robot.karma_increment_responses = [ 
+    "yeah!",
+    "+1",
+    ":+1:",
+    "you rock!",
+    ":asdf:",
+    ":metal:"
+  ]
+
+  robot.karma_decrement_responses = [
+    "d'oh!",
+    "take that!",
+    ":stuck_out_tongue_closed_eyes:",
+    "boooo!",
+    "-1",
+    ":-1:"
+  ]
 
   random = (min, max) -> return Math.floor(Math.random() * (max-min)) + min
 
