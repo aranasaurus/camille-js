@@ -32,7 +32,7 @@ module.exports = (robot) ->
 
   greetings = ['Hi!', 'ohai!', 'Greetings, citizen.', 'Greetings, program.', 'Hiya!']
   greetingRegex =         /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)/i
-  greetingRegexWithName = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)(,? @?camille[.!]?)/i
+  greetingRegexWithName = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)(,? @?camille[\.\!]?)/i
   robot.respond greetingRegex, (res) ->
     res.reply res.random greetings
 
