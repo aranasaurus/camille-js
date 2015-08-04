@@ -31,11 +31,12 @@ module.exports = (robot) ->
   random = (min, max) -> return Math.floor(Math.random() * (max-min)) + min
 
   greetings = ['Hi!', 'ohai!', 'Greetings, citizen.', 'Greetings, program.', 'Hiya!']
-  greetingRegex = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)(\.?!?$|.*,? @?camille[.!]?)/i
+  greetingRegex =         /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)/i
+  greetingRegexWithName = /(hi|hello|ohai|hai|hey|(?:good )?(mornin'?g?|evenin'?g?)|howdy|hola|ciao|hallo|bonjour|goedemiddag)(,? @?camille[.!]?)/i
   robot.respond greetingRegex, (res) ->
     res.reply res.random greetings
 
-  robot.hear greetingRegex, (res) ->
+  robot.hear greetingRegexWithName, (res) ->
     name = res.match[3]
     if (name.toLowerCase().indexOf robot.name.toLowerCase()) > -1
       res.reply res.random greetings
