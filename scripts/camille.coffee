@@ -55,7 +55,8 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /.* me a coffee/i, (res) ->
+  robot.respond /.* me (?:a |some )?coffee/i, (res) ->
+    res.message.link_names = true
     res.reply ":coffee:"
 
   # robot.hear /badger/i, (res) ->
