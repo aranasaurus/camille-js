@@ -78,19 +78,21 @@ class Karma
 module.exports = (robot) ->
   karma = new Karma robot
 
+  nameREString = "(@|:)(\\S+[^+:\\s])(:?|: )?"
+
   ###
   # Listen for "++" messages and increment
   ###
-  robot.hear /(?:@|:)(\S+[^+:\s])(:?|: )?\+\+(\s|$)/, (msg) ->
-    subject = msg.match[1].toLowerCase().replace(':', '')
+  robot.hear new RegExp("#{nameREString}\\+\\+(\s|$)"), (msg) ->
+    subject = msg.match[2].toLowerCase().replace(':', '')
     karma.increment subject
     msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
 
   ###
   # Listen for "--" messages and decrement
   ###
-  robot.hear /(?:@|:)(\S+[^-:\s])(:?|: )?--(\s|$)/, (msg) ->
-    subject = msg.match[1].toLowerCase().replace(':', '')
+  robot.hear new RegExp("#{nameREString}--(\s|$)"), (msg) ->
+    subject = msg.match[2].toLowerCase().replace(':', '')
     # avoid catching HTML comments
     unless subject[-2..] == "<!"
       karma.decrement subject
