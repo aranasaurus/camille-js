@@ -56,13 +56,18 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /(?:.* me|I'd like) (?:a |some )?coffee/i, (res) ->
+  robot.respond /(?:.* me|I'd like|can I have|I can ha(?:s|z)|gimme) (?:a |some )?(.+)/i, (res) ->
+    thing = res.match[1]
+    if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza"]
+      thing = ":#{thing}:"
+    else if thing[0] isnt ":"
+      thing = "\"#{thing}\""
+
     res.reply res.random [
-      "here's a :coffee:",
-      "here, have some :coffee:",
-      ":coffee:",
-      ":coffee:, enjoy!",
-      ":coffee:, I hope it's as delicious as it was difficult to make..."
+      "here's a #{thing}",
+      "here, have some #{thing}",
+      "#{thing}",
+      "#{thing}, I hope it's as delicious as it was difficult to make..."
     ]
 
   # robot.hear /badger/i, (res) ->
