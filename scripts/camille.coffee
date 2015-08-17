@@ -58,6 +58,7 @@ module.exports = (robot) ->
 
   robot.respond /(?:.* me|I'd like|can I have|I can ha(?:s|z)|gimme) (?:a |some )?(:?\S+:?[^!.?\s])/i, (res) ->
     thing = res.match[1]
+    thing = "hamburger" if thing in ["cheezeburger", "cheezburger", "cheeseburger"]
     if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza"]
       thing = ":#{thing}:"
     else if thing[0] isnt ":"
