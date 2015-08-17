@@ -70,6 +70,107 @@ module.exports = (robot) ->
       "#{thing}, I hope it's as delicious as it was difficult to make..."
     ]
 
+  robot.respond /are you (:awake|alive|okay|ok|t?here|alright|alrite)/i, (res) ->
+    adjective = res.match[1]
+    adjective = "here" if adjective is "there"
+    adjective = "alright" if adjective is "alrite"
+    res.reply chitChat(res, adjective, true, true)
+
+  robot.respond /how are you/i, (res) ->
+    res.reply chitChat(res, "okay", false, false)
+
+  chitChat = (res, adjective, prefixable, useExtras) ->
+    contextualResponse = "I'm here."
+    switch adjective
+      when "awake"
+        contextualResponse = res.random [
+          "I'm up!",
+          "I'm awake!",
+          "I'm here!",
+          "I'm still kickin'!",
+          "I'm up! I'm up!"
+        ]
+        contextualResponse = res.random ["Yep, #{contextualResponse}", contextualResponse] if prefixable
+      when "alive"
+        contextualResponse = res.random [
+          "I'm alive.",
+          "I'm here.",
+          "I'm still kickin'!",
+          "I'm not _dead_..."
+        ]
+        contextualResponse = res.random ["Yep, #{contextualResponse}", "Well... #{contextualResponse}", contextualResponse] if prefixable
+        contextualResponse = makeTheFeelingMutual(res, contextualResponse)
+      when "okay", "ok", "alright"
+        contextualResponse = res.random [
+          "I'm #{adjective}.",
+          "I'm good.",
+          "I'm great!",
+          "I've been better...",
+          "I'm fine.",
+          "Never better!"
+        ]
+        contextualResponse = res.random [
+          contextualResponse,
+          "Yep, #{contextualResponse}",
+          "Yep! #{contextualResponse}",
+          "Hmm, #{contextualResponse}"
+        ] if prefixable
+        contextualResponse = makeTheFeelingMutual(res, contextualResponse)
+      when "here"
+        contextualResponse = res.random [
+          "I'm here!", "I'm here.",
+          "Right here!",
+          "Here!",
+          "Reporting for duty!"
+        ]
+        contextualResponse = res.random [
+          contextualResponse,
+          "Yep, #{contextualResponse}",
+          "Yep! #{contextualResponse}"
+        ] if prefixable
+
+    contextualResponse = res.random [
+      "yep!",
+      "yep",
+      "yes!",
+      "yes",
+      "How can I help you?",
+      "What can I do for you?",
+      "pip pip!",
+      "yo",
+      "yo.",
+      "yo!",
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse,
+      contextualResponse
+    ] if useExtras
+    return contextualResponse
+
+  makeTheFeelingMutual = (res, response) ->
+    return res.random [
+      response,
+      "#{response} How're you?",
+      "#{response} How are you?",
+      "#{response} How've you been?",
+      "#{response} How have you been?",
+      "#{response} How bout you?",
+      "#{response} How 'bout you?",
+      "#{response} How about you?",
+      "#{response} How you doin?",
+      "#{response} How are you doing?",
+      "#{response} You?",
+      "#{response} And you?"
+    ]
+
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #
