@@ -60,7 +60,8 @@ module.exports = (robot) ->
     quantifier = res.match[1]
     thing = res.match[2]
     thing = "hamburger" if thing in ["cheezeburger", "cheezburger", "cheeseburger"]
-    if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza", "iankeen", "aranasaurus"]
+    if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza", "iankeen", "@iankeen", "aranasaurus", "@aranasaurus"]
+      thing = thing.replace("@", "")
       thing = ":#{thing}:"
     else if thing[0] isnt ":"
       thing = "\"#{thing}\""
