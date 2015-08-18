@@ -56,8 +56,9 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /(?:.* me|I'd like|can I have|I can ha(?:s|z)|gimme) (?:a |some )?(:?\S+:?[^!.?\s])/i, (res) ->
-    thing = res.match[1]
+  robot.respond /(?:give me|get me|fetch me|beer me|I'd like|can I have|I can ha(?:s|z)|gimme) (a |some )?(:?\S+:?[^!.?\s])/i, (res) ->
+    quantifier = res.match[1]
+    thing = res.match[2]
     thing = "hamburger" if thing in ["cheezeburger", "cheezburger", "cheeseburger"]
     if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza"]
       thing = ":#{thing}:"
@@ -65,10 +66,11 @@ module.exports = (robot) ->
       thing = "\"#{thing}\""
 
     res.reply res.random [
-      "here's a #{thing}",
-      "here, have some #{thing}",
+      "here's #{quantifier}#{thing}",
+      "here, have #{quantifier}#{thing}",
       "#{thing}",
-      "#{thing}, I hope it's as delicious as it was difficult to make..."
+      "#{thing}, I hope it's as delicious as it was difficult to make...",
+      "#{quantifier}#{thing}, coming right up!"
     ]
 
   robot.respond /are you (:awake|alive|okay|ok|t?here|alright|alrite)/i, (res) ->
