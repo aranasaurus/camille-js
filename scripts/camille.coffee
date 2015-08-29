@@ -64,7 +64,7 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.hear /(give|get|gim|fetch|I'd like|can I have|I can ha(?:s|z)) ?@?(\S+[^-\s:])?:? (a|some)? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
+  robot.hear /(give|get|gimme|fetch|I'd like|can I have|I can ha(?:s|z)) @?(\S+[^-\s:])?:? ?(a |some )? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
     verb = res.match[1]
     target = res.match[2]
     quantifier = res.match[3].trim() if res.match[3]?
