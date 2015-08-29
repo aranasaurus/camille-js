@@ -1,3 +1,5 @@
+Util = require 'util'
+
 # Description:
 #   Example scripts for you to examine and try out.
 #
@@ -7,6 +9,12 @@
 #   Uncomment the ones you want to try and experiment with.
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
+
+# Stole this from https://gist.github.com/felixrabe/db88674566e14e413c6f
+String::startsWith ?= (s) -> @slice(0, s.length) == s
+
+# Stole this from https://coffeescript-cookbook.github.io/chapters/strings/trimming-whitespace-from-a-string
+String::strip = -> if String::trim? then @trim() else @replace /^\s+|\s+$/g, ""
 
 module.exports = (robot) ->
   robot.karma_increment_responses = [ 
@@ -56,9 +64,27 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /(?:give me|get me|fetch me|beer me|I'd like|can I have|I can ha(?:s|z)|gimme) (a |some )?(:?\S+:?[^!.?\s])/i, (res) ->
-    quantifier = res.match[1]
-    thing = res.match[2]
+  robot.hear /(give|get|gim|fetch|I'd like|can I|I can ha(?:s|z)) ?@?(\S+[^-\s:])?:? (a|some)? ?(:?\S+:?[^!.?\s])/i, (res) ->
+    verb = res.match[1]
+    target = res.match[2]
+    quantifier = res.match[3].trim() if res.match[3]?
+
+    # the above group matches work for the standard "give", "get", "fetch", and "gimme", but for the "I'd like", "can I have", and "I can haz" variants we need to massage the matches a little
+    if verb not in ["give", "get", "fetch", "gim"]
+      # for the "I'd like" variant the quantifier is in the 2nd group, not the 3rd
+      quantifier = res.match[2] if verb is "I'd like"
+
+      # for the "I can haz" variants the quantifier is missing, so fake it
+      quantifier = "a" if verb.startsWith "I can ha"
+
+      # all of the variants have a target of the user that sent this message, so fake the target and verb to make these variants work the same way that "give me" would
+      verb = "give"
+      target = "me"
+
+    if target is "me"
+      target = res.message.user.name
+
+    thing = res.match[4]
     thing = "hamburger" if thing in ["cheezeburger", "cheezburger", "cheeseburger"]
     if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza", "iankeen", "@iankeen", "aranasaurus", "@aranasaurus"]
       thing = thing.replace("@", "")
@@ -66,12 +92,12 @@ module.exports = (robot) ->
     else if thing[0] isnt ":"
       thing = "\"#{thing}\""
 
-    res.reply res.random [
-      "here's #{quantifier}#{thing}",
-      "here, have #{quantifier}#{thing}",
-      "#{thing}",
-      "#{thing}, I hope it's as delicious as it was difficult to make...",
-      "#{quantifier}#{thing}, coming right up!"
+    res.send res.random [
+      "#{target}: here's #{quantifier} #{thing}",
+      "here, have #{quantifier} #{thing}, #{target}",
+      "#{target}: #{thing}",
+      "#{target}: #{thing}, I hope it's as delicious as it was difficult to make...",
+      "#{target}: #{quantifier} #{thing}, coming right up!"
     ]
 
   robot.respond /are you (:awake|alive|okay|ok|t?here|alright|alrite)/i, (res) ->
