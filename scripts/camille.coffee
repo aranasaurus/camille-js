@@ -64,18 +64,24 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /(give|get|gimme|fetch|I'd like|can I have|I can ha(?:s|z)) @?(\S+[^-\s:])?:? ?(an? |some )? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
+  robot.respond /(give|get|gimme|fetch|can I have|I can ha(?:s|z)) @?([^(?:an? |some )]\S+[^-\s:])?:? ?(an? |some )? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
     verb = res.match[1]
     target = res.match[2]
     quantifier = res.match[3]
 
     # the above group matches work for the standard "give", "get", "fetch", and "gimme", but for the "I'd like", "can I have", and "I can haz" variants we need to massage the matches a little
     if verb not in ["give", "get", "fetch", "gim"]
-      # for the "I'd like" variant the quantifier is in the 2nd group, not the 3rd
-      quantifier = res.match[2] if verb is "I'd like"
+      if verb.toLowerCase().startsWith "i can ha"
+        # for the "I can haz" variants the quantifier is missing, so fake it
+        quantifier = "a"
 
-      # for the "I can haz" variants the quantifier is missing, so fake it
-      quantifier = "a" if verb.startsWith "I can ha"
+      if verb.toLowerCase() is "can i have"
+        # for the "can I have" case, the quantifier is group 2, not 3
+        quantifier = res.match[2] + " "
+
+        # special case for "can i have another"
+        if res.match[4].toLowerCase().startsWith "another"
+          quantifier = ""
 
       # all of the variants have a target of the user that sent this message, so fake the target and verb to make these variants work the same way that "give me" would
       verb = "give"
@@ -89,14 +95,14 @@ module.exports = (robot) ->
     if thing in ["coffee", "beer", "beers", "poop", "shit", "tada", "rocket", "eggplant", "sushi", "doughnut", "cocktail", "sake", "taco", "hamburger", "pizza", "iankeen", "@iankeen", "aranasaurus", "@aranasaurus"]
       thing = thing.replace("@", "")
       thing = ":#{thing}:"
-    else if thing[0] isnt ":"
+    else if thing[0] isnt ":" and not thing.startsWith "another"
       thing = "\"#{thing}\""
 
     res.send res.random [
       "#{target}: here's #{quantifier ? "some "}#{thing}",
       "here, have #{quantifier ? "some "}#{thing}, #{target}",
-      "#{target}: #{thing}",
-      "#{target}: #{thing}, I hope it's as delicious as it was difficult to make...",
+      #"#{target}: #{thing}",
+      #"#{target}: #{thing}, I hope it's as delicious as it was difficult to make...",
       "#{target}: #{quantifier ? " "}#{thing}, coming right up!"
     ]
 
