@@ -64,10 +64,10 @@ module.exports = (robot) ->
     else
       res.send res.random thanksResponses
 
-  robot.respond /(give|get|gimme|fetch|I'd like|can I have|I can ha(?:s|z)) @?(\S+[^-\s:])?:? ?(a |some )? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
+  robot.respond /(give|get|gimme|fetch|I'd like|can I have|I can ha(?:s|z)) @?(\S+[^-\s:])?:? ?(an? |some )? ?(:?.+:?[^\?\.\!])[\?\.\!]?$/i, (res) ->
     verb = res.match[1]
     target = res.match[2]
-    quantifier = res.match[3].trim() if res.match[3]?
+    quantifier = res.match[3]
 
     # the above group matches work for the standard "give", "get", "fetch", and "gimme", but for the "I'd like", "can I have", and "I can haz" variants we need to massage the matches a little
     if verb not in ["give", "get", "fetch", "gim"]
@@ -93,11 +93,11 @@ module.exports = (robot) ->
       thing = "\"#{thing}\""
 
     res.send res.random [
-      "#{target}: here's #{quantifier} #{thing}",
-      "here, have #{quantifier} #{thing}, #{target}",
+      "#{target}: here's #{quantifier ? "some "}#{thing}",
+      "here, have #{quantifier ? "some "}#{thing}, #{target}",
       "#{target}: #{thing}",
       "#{target}: #{thing}, I hope it's as delicious as it was difficult to make...",
-      "#{target}: #{quantifier} #{thing}, coming right up!"
+      "#{target}: #{quantifier ? " "}#{thing}, coming right up!"
     ]
 
   robot.respond /are you (:awake|alive|okay|ok|t?here|alright|alrite)/i, (res) ->
