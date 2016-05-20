@@ -34,7 +34,7 @@ class Karma
     ]
 
     @cheat_responses = @robot.karma_cheat_responses ? [
-      "Nice try.", "Do you really think that I'm _that_ dumb?", "This is some next-level narcissism."
+      "Nice try.", "Do you really think that I'm _that_ dumb?", "This is some next-level narcissism.", "Are you feeling underappreciated?"
     ]
 
     @robot.brain.on 'loaded', =>
@@ -90,34 +90,34 @@ module.exports = (robot) ->
   ###
   # Listen for "++" messages and increment
   ###
-  robot.hear new RegExp("#{nameREString}\\+\\+(\s|$)"), (msg) ->
-    subject = msg.match[2].toLowerCase().replace(':', '')
-    sender = msg.user.name
+  robot.hear new RegExp("#{nameREString}\\+\\+(\s|$)"), (res) ->
+    subject = res.match[2].toLowerCase().replace(':', '')
+    sender = res.message.user.name
 
     # Check if the user tried to change his/her own karma level
     if subject is sender
-      msg.send "#{karma.cheatResponse()}"
+      res.send "#{karma.cheatResponse()}"
     else
       karma.increment subject
-      msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
+      res.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
 
   ###
   # Listen for "--" messages and decrement
   ###
-  robot.hear new RegExp("#{nameREString}--(\s|$)"), (msg) ->
-    subject = msg.match[2].toLowerCase().replace(':', '')
+  robot.hear new RegExp("#{nameREString}--(\s|$)"), (res) ->
+    subject = res.match[2].toLowerCase().replace(':', '')
     # avoid catching HTML comments
     unless subject[-2..] == "<!"
       karma.decrement subject
-      msg.send "#{subject} #{karma.decrementResponse()} (Karma: #{karma.get(subject)})"
+      res.send "#{subject} #{karma.decrementResponse()} (Karma: #{karma.get(subject)})"
 
   ###
   # Listen for "karma clear x" and empty x's karma
   ###
-  robot.respond /karma clear ?@?(\S+[^-\s:]):?$/i, (msg) ->
-    subject = msg.match[1].toLowerCase()
+  robot.respond /karma clear ?@?(\S+[^-\s:]):?$/i, (res) ->
+    subject = res.match[1].toLowerCase()
     karma.clear subject
-    msg.send "#{subject} has had its karma scattered to the winds."
+    res.send "#{subject} has had its karma scattered to the winds."
 
   ###
   # Function that handles best and worst list
