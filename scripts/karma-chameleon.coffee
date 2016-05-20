@@ -34,7 +34,7 @@ class Karma
     ]
 
     @cheat_responses = @robot.karma_cheat_responses ? [
-      "Nice try.", "Do you really think that I'm _that_ stupid?", "This is some next-level narcissism."
+      "Nice try.", "Do you really think that I'm _that_ dumb?", "This is some next-level narcissism."
     ]
 
     @robot.brain.on 'loaded', =>
