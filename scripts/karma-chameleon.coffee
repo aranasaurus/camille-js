@@ -33,6 +33,10 @@ class Karma
       "took a hit! Ouch.", "took a dive.", "lost a life.", "lost a level."
     ]
 
+    @cheat_responses = @robot.karma_cheat_responses ? [
+      "Nice try.", "Do you really think that I'm _that_ dumb?", "This is some next-level narcissism."
+    ]
+
     @robot.brain.on 'loaded', =>
       if @robot.brain.data.karma
         @cache = @robot.brain.data.karma
@@ -52,10 +56,13 @@ class Karma
     @robot.brain.data.karma = @cache
 
   incrementResponse: ->
-     @increment_responses[Math.floor(Math.random() * @increment_responses.length)]
+    @increment_responses[Math.floor(Math.random() * @increment_responses.length)]
 
   decrementResponse: ->
-     @decrement_responses[Math.floor(Math.random() * @decrement_responses.length)]
+    @decrement_responses[Math.floor(Math.random() * @decrement_responses.length)]
+
+  cheatResponse: ->
+    @cheat_responses[Math.floor(Math.random() * @cheat_responses.length)]
 
   get: (thing) ->
     k = if @cache[thing] then @cache[thing] else 0
@@ -85,8 +92,14 @@ module.exports = (robot) ->
   ###
   robot.hear new RegExp("#{nameREString}\\+\\+(\s|$)"), (msg) ->
     subject = msg.match[2].toLowerCase().replace(':', '')
-    karma.increment subject
-    msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
+    sender = msg.user.name
+
+    # Check if the user tried to change his/her own karma level
+    if subject is sender
+      msg.send "#{karma.cheatResponse()}"
+    else
+      karma.increment subject
+      msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
 
   ###
   # Listen for "--" messages and decrement
